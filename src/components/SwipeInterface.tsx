@@ -1,17 +1,17 @@
-import { useState, useRef } from 'react';
-import { Heart, X, Star, RotateCcw } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Heart, X, Star, RotateCcw, Zap } from 'lucide-react';
 import ProfileCard from './ProfileCard';
 import MatchModal from './MatchModal';
 import { AccountantProfile } from '../types';
 
-// Mock data with better images
+// Enhanced mock data
 const mockProfiles: AccountantProfile[] = [
   {
     id: '1',
     name: 'Sarah Chen',
     age: 28,
     photo: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500&h=700&fit=crop&crop=face',
-    specialization: 'Tax Accounting',
+    specialization: 'Tax Strategy',
     experience: 'Mid-Level',
     company: 'Deloitte',
     location: 'New York, NY',
@@ -91,24 +91,38 @@ const SwipeInterface = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
+  const [swipeIntensity, setSwipeIntensity] = useState(0);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  console.log('Modern SwipeInterface rendered, currentIndex:', currentIndex);
+  console.log('Ultra-modern SwipeInterface rendered, currentIndex:', currentIndex);
 
   const currentProfile = profiles[currentIndex];
+
+  useEffect(() => {
+    // Add haptic feedback simulation
+    const addHapticFeedback = () => {
+      if (navigator.vibrate) {
+        navigator.vibrate(10);
+      }
+    };
+
+    if (swipeDirection) {
+      addHapticFeedback();
+    }
+  }, [swipeDirection]);
 
   const handleSwipe = (action: 'like' | 'pass' | 'super-like') => {
     console.log('Swipe action:', action, 'for profile:', currentProfile?.name);
     
     if (!currentProfile) return;
 
-    // Simulate match (40% chance for likes and super-likes)
-    if ((action === 'like' || action === 'super-like') && Math.random() < 0.4) {
+    // Enhanced match probability
+    if ((action === 'like' || action === 'super-like') && Math.random() < 0.5) {
       setMatchedProfile(currentProfile);
       setIsMatch(true);
     }
 
-    // Add swipe animation
+    // Modern swipe animation
     if (cardRef.current) {
       if (action === 'like' || action === 'super-like') {
         cardRef.current.classList.add('animate-swipe-right');
@@ -117,71 +131,77 @@ const SwipeInterface = () => {
       }
     }
 
-    // Move to next profile after animation
     setTimeout(() => {
       setCurrentIndex(prev => prev + 1);
       if (cardRef.current) {
         cardRef.current.classList.remove('animate-swipe-right', 'animate-swipe-left');
         cardRef.current.style.transform = '';
       }
+      setSwipeDirection(null);
+      setSwipeIntensity(0);
     }, 300);
   };
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleTouchStart = (e: React.TouchEvent) => {
     setIsDragging(true);
+    const touch = e.touches[0];
     const rect = cardRef.current?.getBoundingClientRect();
     if (rect) {
       setDragOffset({
-        x: e.clientX - rect.left - rect.width / 2,
-        y: e.clientY - rect.top - rect.height / 2
+        x: touch.clientX - rect.left - rect.width / 2,
+        y: touch.clientY - rect.top - rect.height / 2
       });
     }
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handleTouchMove = (e: React.TouchEvent) => {
     if (!isDragging || !cardRef.current) return;
     
+    const touch = e.touches[0];
     const rect = cardRef.current.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
     
-    const deltaX = e.clientX - centerX - dragOffset.x;
-    const deltaY = e.clientY - centerY - dragOffset.y;
+    const deltaX = touch.clientX - centerX - dragOffset.x;
+    const deltaY = touch.clientY - centerY - dragOffset.y;
     
     const rotation = deltaX * 0.1;
-    const opacity = Math.max(0.7, 1 - Math.abs(deltaX) / 200);
+    const opacity = Math.max(0.8, 1 - Math.abs(deltaX) / 300);
+    const scale = Math.max(0.95, 1 - Math.abs(deltaX) / 1000);
     
-    cardRef.current.style.transform = `translate(${deltaX}px, ${deltaY}px) rotate(${rotation}deg)`;
+    cardRef.current.style.transform = `translate(${deltaX}px, ${deltaY}px) rotate(${rotation}deg) scale(${scale})`;
     cardRef.current.style.opacity = opacity.toString();
 
-    // Show swipe direction indicator
-    if (Math.abs(deltaX) > 50) {
+    // Enhanced swipe feedback
+    const intensity = Math.min(100, Math.abs(deltaX) / 2);
+    setSwipeIntensity(intensity);
+
+    if (Math.abs(deltaX) > 60) {
       setSwipeDirection(deltaX > 0 ? 'right' : 'left');
     } else {
       setSwipeDirection(null);
     }
   };
 
-  const handleMouseUp = (e: React.MouseEvent) => {
+  const handleTouchEnd = (e: React.TouchEvent) => {
     if (!isDragging || !cardRef.current) return;
     
     setIsDragging(false);
-    setSwipeDirection(null);
     
+    const touch = e.changedTouches[0];
     const rect = cardRef.current.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
-    const deltaX = e.clientX - centerX;
+    const deltaX = touch.clientX - centerX;
     
     if (Math.abs(deltaX) > 120) {
-      // Trigger swipe
       if (deltaX > 0) {
         handleSwipe('like');
       } else {
         handleSwipe('pass');
       }
     } else {
-      // Snap back with smooth animation
-      cardRef.current.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+      // Smooth snap back
+      cardRef.current.style.transition = 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
       cardRef.current.style.transform = '';
       cardRef.current.style.opacity = '1';
       
@@ -189,7 +209,9 @@ const SwipeInterface = () => {
         if (cardRef.current) {
           cardRef.current.style.transition = '';
         }
-      }, 300);
+        setSwipeDirection(null);
+        setSwipeIntensity(0);
+      }, 400);
     }
   };
 
@@ -201,18 +223,18 @@ const SwipeInterface = () => {
   if (currentIndex >= profiles.length) {
     return (
       <div className="flex-1 flex items-center justify-center p-8">
-        <div className="text-center animate-slide-up">
-          <div className="w-32 h-32 gradient-primary rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl">
+        <div className="text-center animate-bounce-in">
+          <div className="w-32 h-32 bg-gradient-to-br from-violet-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl animate-pulse-glow">
             <Heart className="w-16 h-16 text-white" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">No More Profiles</h2>
-          <p className="text-gray-600 mb-8 text-lg">Check back later for new accountants in your area!</p>
+          <h2 className="text-display mb-4">All Caught Up!</h2>
+          <p className="text-body mb-8 max-w-sm mx-auto">You've seen all the amazing accountants in your area. Check back soon for new connections!</p>
           <button 
             onClick={resetStack}
-            className="action-btn like-btn w-auto px-8 py-4 rounded-2xl text-lg font-semibold"
+            className="fab fab-like w-auto px-8 py-4 rounded-2xl"
           >
-            <RotateCcw className="w-6 h-6 mr-2" />
-            Start Over
+            <RotateCcw className="w-6 h-6 mr-2 text-white" />
+            <span className="text-white font-semibold">Restart</span>
           </button>
         </div>
       </div>
@@ -220,46 +242,46 @@ const SwipeInterface = () => {
   }
 
   return (
-    <div className="flex-1 flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
-      {/* Cards Stack */}
-      <div className="flex-1 flex items-center justify-center p-6 relative">
+    <div className="flex-1 flex flex-col">
+      {/* Cards container */}
+      <div className="flex-1 flex items-center justify-center p-4 relative">
         <div className="relative w-full max-w-sm">
-          {/* Background cards for depth */}
+          {/* Background cards with modern stacking */}
           {profiles[currentIndex + 2] && (
-            <div className="absolute inset-0 transform scale-90 opacity-30 rotate-1">
+            <div className="absolute inset-0 transform scale-90 opacity-20 rotate-2 blur-sm">
               <ProfileCard profile={profiles[currentIndex + 2]} />
             </div>
           )}
           
-          {/* Next card */}
           {profiles[currentIndex + 1] && (
-            <div className="absolute inset-0 transform scale-95 opacity-60 -rotate-1">
+            <div className="absolute inset-0 transform scale-95 opacity-50 -rotate-1">
               <ProfileCard profile={profiles[currentIndex + 1]} />
             </div>
           )}
           
-          {/* Current card */}
+          {/* Current card with enhanced interactions */}
           {currentProfile && (
             <div
               ref={cardRef}
               className={`relative z-10 cursor-grab active:cursor-grabbing transition-transform ${
                 isDragging ? '' : 'hover:scale-105'
               }`}
-              onMouseDown={handleMouseDown}
-              onMouseMove={handleMouseMove}
-              onMouseUp={handleMouseUp}
-              onMouseLeave={handleMouseUp}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
             >
               <ProfileCard profile={currentProfile} />
               
-              {/* Swipe Direction Indicators */}
+              {/* Enhanced swipe indicators */}
               {swipeDirection && (
-                <div className={`absolute inset-0 flex items-center justify-center pointer-events-none ${
-                  swipeDirection === 'right' ? 'bg-green-500/20' : 'bg-red-500/20'
-                } rounded-3xl transition-all duration-200`}>
-                  <div className={`w-24 h-24 rounded-full flex items-center justify-center ${
-                    swipeDirection === 'right' ? 'bg-green-500' : 'bg-red-500'
-                  } shadow-2xl`}>
+                <div className={`swipe-indicator rounded-3xl ${
+                  swipeDirection === 'right' ? 'swipe-like' : 'swipe-reject'
+                }`}>
+                  <div className={`w-24 h-24 rounded-full flex items-center justify-center shadow-2xl transform scale-${Math.min(150, 100 + swipeIntensity) / 100} ${
+                    swipeDirection === 'right' 
+                      ? 'bg-gradient-to-br from-green-400 to-emerald-500' 
+                      : 'bg-gradient-to-br from-red-400 to-pink-500'
+                  }`}>
                     {swipeDirection === 'right' ? (
                       <Heart className="w-12 h-12 text-white" />
                     ) : (
@@ -273,31 +295,53 @@ const SwipeInterface = () => {
         </div>
       </div>
 
-      {/* Modern Action Buttons */}
-      <div className="flex justify-center items-center space-x-8 p-8 glass-dark rounded-t-3xl">
-        <button 
-          onClick={() => handleSwipe('pass')}
-          className="action-btn pass-btn"
-          disabled={isDragging}
-        >
-          <X className="w-7 h-7" />
-        </button>
-        
-        <button 
-          onClick={() => handleSwipe('super-like')}
-          className="action-btn super-like-btn"
-          disabled={isDragging}
-        >
-          <Star className="w-6 h-6" />
-        </button>
-        
-        <button 
-          onClick={() => handleSwipe('like')}
-          className="action-btn like-btn"
-          disabled={isDragging}
-        >
-          <Heart className="w-7 h-7" />
-        </button>
+      {/* Ultra-modern floating action buttons */}
+      <div className="relative">
+        <div className="glass-panel mx-4 mb-8 rounded-3xl p-6">
+          <div className="flex justify-center items-center space-x-6">
+            <button 
+              onClick={() => handleSwipe('pass')}
+              className="fab fab-reject"
+              disabled={isDragging}
+            >
+              <X className="w-7 h-7 text-white" />
+            </button>
+            
+            <button 
+              onClick={() => handleSwipe('super-like')}
+              className="fab fab-super"
+              disabled={isDragging}
+            >
+              <Zap className="w-6 h-6 text-white" />
+            </button>
+            
+            <button 
+              onClick={() => handleSwipe('like')}
+              className="fab fab-like"
+              disabled={isDragging}
+            >
+              <Heart className="w-7 h-7 text-white" />
+            </button>
+          </div>
+          
+          {/* Progress indicator */}
+          <div className="mt-4 flex justify-center">
+            <div className="flex space-x-1">
+              {profiles.map((_, index) => (
+                <div 
+                  key={index}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    index < currentIndex 
+                      ? 'bg-gradient-to-r from-violet-500 to-purple-600' 
+                      : index === currentIndex
+                      ? 'bg-gradient-to-r from-blue-500 to-cyan-400 scale-125'
+                      : 'bg-gray-300'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Match Modal */}
