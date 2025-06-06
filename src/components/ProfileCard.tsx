@@ -1,4 +1,4 @@
-import { MapPin, GraduationCap, Building, Award } from 'lucide-react';
+import { MapPin, GraduationCap, Building, Award, Briefcase, Star } from 'lucide-react';
 import { AccountantProfile } from '../types';
 
 interface ProfileCardProps {
@@ -8,95 +8,119 @@ interface ProfileCardProps {
 }
 
 const ProfileCard = ({ profile, style, className = '' }: ProfileCardProps) => {
-  console.log('ProfileCard rendered for:', profile.name);
+  console.log('Modern ProfileCard rendered for:', profile.name);
 
-  const getExperienceBadgeClass = (experience: string) => {
+  const getExperienceColor = (experience: string) => {
     switch (experience) {
       case 'Junior':
-        return 'experience-junior';
+        return 'from-blue-500 to-cyan-500';
       case 'Mid-Level':
-        return 'experience-mid';
+        return 'from-purple-500 to-pink-500';
       case 'Senior':
-        return 'experience-senior';
+        return 'from-orange-500 to-red-500';
       case 'Partner':
-        return 'experience-partner';
+        return 'from-yellow-500 to-orange-500';
       default:
-        return 'experience-junior';
+        return 'from-gray-500 to-gray-600';
     }
   };
 
   return (
     <div 
-      className={`swipe-card w-full max-w-sm mx-auto ${className}`}
+      className={`profile-card w-full max-w-sm mx-auto animate-fade-scale ${className}`}
       style={style}
     >
-      {/* Profile Image */}
-      <div className="relative h-80 overflow-hidden">
+      {/* Hero Image Section */}
+      <div className="relative h-96 overflow-hidden">
         <img 
           src={profile.photo} 
           alt={profile.name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+        
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
         
         {/* Experience Badge */}
-        <div className="absolute top-4 right-4">
-          <span className={`experience-badge ${getExperienceBadgeClass(profile.experience)}`}>
+        <div className="absolute top-6 right-6">
+          <div className={`experience-badge bg-gradient-to-r ${getExperienceColor(profile.experience)} shadow-lg`}>
+            <Star className="w-3 h-3 mr-1" />
             {profile.experience}
-          </span>
+          </div>
         </div>
         
-        {/* Name and Age */}
-        <div className="absolute bottom-4 left-4 text-white">
-          <h2 className="text-2xl font-bold">{profile.name}, {profile.age}</h2>
-          <p className="text-sm opacity-90">{profile.yearsExperience} years experience</p>
+        {/* Profile Info Overlay */}
+        <div className="absolute bottom-6 left-6 right-6">
+          <div className="space-y-2">
+            <h2 className="text-3xl font-bold text-white">{profile.name}</h2>
+            <p className="text-white/90 text-lg font-medium">{profile.age} years old</p>
+            <div className="flex items-center space-x-2 text-white/80">
+              <Briefcase className="w-4 h-4" />
+              <span className="text-sm">{profile.yearsExperience} years experience</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Profile Details */}
-      <div className="p-6 space-y-4">
+      {/* Content Section */}
+      <div className="p-6 space-y-6">
         {/* Specialization */}
-        <div>
-          <span className="professional-badge">
+        <div className="text-center">
+          <span className="skill-badge text-lg font-semibold px-6 py-2">
             {profile.specialization}
           </span>
         </div>
 
-        {/* Company and Location */}
-        <div className="space-y-2">
-          <div className="flex items-center space-x-2 text-slate-600">
-            <Building className="w-4 h-4" />
-            <span className="text-sm">{profile.company}</span>
+        {/* Company & Location */}
+        <div className="space-y-3">
+          <div className="flex items-center space-x-3 p-3 rounded-2xl bg-gray-50">
+            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
+              <Building className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <p className="font-semibold text-gray-900">{profile.company}</p>
+              <p className="text-sm text-gray-600">Company</p>
+            </div>
           </div>
-          <div className="flex items-center space-x-2 text-slate-600">
-            <MapPin className="w-4 h-4" />
-            <span className="text-sm">{profile.location}</span>
+          
+          <div className="flex items-center space-x-3 p-3 rounded-2xl bg-gray-50">
+            <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
+              <MapPin className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <p className="font-semibold text-gray-900">{profile.location}</p>
+              <p className="text-sm text-gray-600">Location</p>
+            </div>
           </div>
-          <div className="flex items-center space-x-2 text-slate-600">
-            <GraduationCap className="w-4 h-4" />
-            <span className="text-sm">{profile.education}</span>
+          
+          <div className="flex items-center space-x-3 p-3 rounded-2xl bg-gray-50">
+            <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+              <GraduationCap className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <p className="font-semibold text-gray-900">{profile.education}</p>
+              <p className="text-sm text-gray-600">Education</p>
+            </div>
           </div>
         </div>
 
         {/* Bio */}
-        <p className="text-slate-700 text-sm leading-relaxed">
-          {profile.bio}
-        </p>
+        <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100">
+          <p className="text-gray-700 leading-relaxed">{profile.bio}</p>
+        </div>
 
         {/* Certifications */}
         {profile.certifications.length > 0 && (
           <div>
-            <div className="flex items-center space-x-1 mb-2">
-              <Award className="w-4 h-4 text-slate-500" />
-              <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">
-                Certifications
-              </span>
+            <div className="flex items-center space-x-2 mb-3">
+              <Award className="w-5 h-5 text-emerald-600" />
+              <h3 className="font-semibold text-gray-900">Certifications</h3>
             </div>
-            <div className="flex flex-wrap gap-1">
+            <div className="flex flex-wrap gap-2">
               {profile.certifications.map((cert, index) => (
                 <span 
                   key={index}
-                  className="px-2 py-1 bg-slate-100 text-slate-700 text-xs rounded-md"
+                  className="cert-badge"
                 >
                   {cert}
                 </span>
@@ -108,14 +132,12 @@ const ProfileCard = ({ profile, style, className = '' }: ProfileCardProps) => {
         {/* Interests */}
         {profile.interests.length > 0 && (
           <div>
-            <span className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2 block">
-              Interests
-            </span>
-            <div className="flex flex-wrap gap-1">
+            <h3 className="font-semibold text-gray-900 mb-3">Interests</h3>
+            <div className="flex flex-wrap gap-2">
               {profile.interests.map((interest, index) => (
                 <span 
                   key={index}
-                  className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-md"
+                  className="px-3 py-1.5 bg-gradient-to-r from-indigo-50 to-blue-50 text-indigo-700 rounded-full text-sm font-medium border border-indigo-200"
                 >
                   {interest}
                 </span>
