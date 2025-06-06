@@ -4,13 +4,13 @@ import ProfileCard from './ProfileCard';
 import MatchModal from './MatchModal';
 import { AccountantProfile } from '../types';
 
-// Mock data for accountant profiles
+// Mock data for accountant profiles with reliable image sources
 const mockProfiles: AccountantProfile[] = [
   {
     id: '1',
     name: 'Sarah Chen',
     age: 28,
-    photo: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=600&fit=crop&crop=face',
+    photo: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=600&fit=crop&crop=face',
     specialization: 'Tax Accounting',
     experience: 'Mid-Level',
     company: 'Deloitte',
@@ -25,7 +25,7 @@ const mockProfiles: AccountantProfile[] = [
     id: '2',
     name: 'Michael Rodriguez',
     age: 32,
-    photo: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=600&fit=crop&crop=face',
+    photo: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=600&fit=crop&crop=face',
     specialization: 'Forensic Accounting',
     experience: 'Senior',
     company: 'KPMG',
@@ -40,7 +40,7 @@ const mockProfiles: AccountantProfile[] = [
     id: '3',
     name: 'Emily Johnson',
     age: 26,
-    photo: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=600&fit=crop&crop=face',
+    photo: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=600&fit=crop&crop=face',
     specialization: 'Audit & Assurance',
     experience: 'Junior',
     company: 'PwC',
@@ -55,7 +55,7 @@ const mockProfiles: AccountantProfile[] = [
     id: '4',
     name: 'David Kim',
     age: 35,
-    photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop&crop=face',
+    photo: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=600&fit=crop&crop=face',
     specialization: 'Management Accounting',
     experience: 'Senior',
     company: 'Ernst & Young',
@@ -70,7 +70,7 @@ const mockProfiles: AccountantProfile[] = [
     id: '5',
     name: 'Jessica Martinez',
     age: 29,
-    photo: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=600&fit=crop&crop=face',
+    photo: 'https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=400&h=600&fit=crop&crop=face',
     specialization: 'Financial Reporting',
     experience: 'Mid-Level',
     company: 'Grant Thornton',
