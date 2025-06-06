@@ -2,10 +2,10 @@ import Header from '../components/Header';
 import SwipeInterface from '../components/SwipeInterface';
 
 const Index = () => {
-  console.log('Index page rendered');
+  console.log('Modern Index page rendered');
   
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
       <Header />
       <SwipeInterface />
     </div>
